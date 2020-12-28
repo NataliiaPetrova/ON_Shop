@@ -6,7 +6,7 @@ as
 BEGIN TRY
 
 DECLARE @EventProcName VARCHAR(250) = OBJECT_SCHEMA_NAME(@@PROCID)+'.'+OBJECT_NAME(@@PROCID)
-DECLARE @ROWCOUNT int
+DECLARE @ROWCOUNT int = 0
 
 
 EXECUTE Logs.SP_EventR @EventProcName, @rowcount
@@ -17,7 +17,7 @@ DECLARE @QuantityProducts int
 
 DECLARE @StartCounter INT = 1
 
-WHILE @StartCounter<30000 
+WHILE @StartCounter<3000
 BEGIN
 SELECT @OrderID = (SELECT TOP(1) OrderID from MASTER.Orders ORDER BY NEWID() )
 SELECT @ProductID = (SELECT TOP(1) ProductID from MASTER.Products ORDER BY NEWID() )
@@ -28,9 +28,8 @@ VALUES (@OrderID,@ProductID,@QuantityProducts )
 
 SET @StartCounter+=1
 print @StartCounter
+SET @ROWCOUNT += (SELECT @@ROWCOUNT)
 END
-
-SET @rowcount=(SELECT @@ROWCOUNT)
 
 EXECUTE Logs.SP_EventC @EventProcName, @rowcount 
 

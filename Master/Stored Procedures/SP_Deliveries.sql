@@ -20,8 +20,8 @@ BEGIN
    SELECT @RandomCityID = (SELECT TOP(1) [CityID] FROM [MASTER].[Cities] ORDER BY NEWID())
 
    INSERT INTO master.Deliveries VALUES (@RandomSteetID, @RandomCityID)
-   PRINT @count
-   SET @RowCount = @RowCount + (SELECT @@ROWCOUNT) 
+   
+   SET @ROWCOUNT += (SELECT @@ROWCOUNT) 
    SET @count = @count + 1
 
  

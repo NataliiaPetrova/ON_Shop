@@ -94,7 +94,6 @@
     <Build Include="Logs\Tables\ErrorLogs.sql" />
     <Build Include="Master\Tables\VersionConfigs.sql" />
     <Build Include="Staging\Tables\NewDeliveries.sql" />
-    <Build Include="dbo\Views\tESTING.sql" />
     <Build Include="Staging\Stored Procedures\SP_PlacingOrder.sql" />
     <Build Include="Master\Stored Procedures\SP_Payments.sql" />
     <Build Include="Staging\Stored Procedures\SP_TruncateNewDeliveries.sql" />
@@ -124,5 +123,10 @@
     <Build Include="Security\Logs.sql" />
     <Build Include="Security\Master.sql" />
     <Build Include="Security\Staging.sql" />
+    <Build Include="Master\Tables\NewDeliveries.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CreateTables.sql" />
+    <None Include="DataPopulation.sql" />
   </ItemGroup>
 </Project>

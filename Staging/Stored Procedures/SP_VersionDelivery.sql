@@ -1,38 +1,43 @@
-﻿
-CREATE      PROCEDURE [Staging].[SP_VersionDelivery]
+﻿/****** Object:  StoredProcedure [Staging].[SP_VersionDelivery]    Script Date: 28.12.2020 16:44:46 ******/
+
+SET NOCOUNT ON
+GO
+
+CREATE PROCEDURE [Staging].[SP_VersionDelivery]
 AS
 
 BEGIN TRY 
 
-DECLARE
+	DECLARE
 	@EventProcName VARCHAR(250) = OBJECT_SCHEMA_NAME(@@PROCID)+'.'+OBJECT_NAME(@@PROCID),
 	@RowCount INT
 
- -- logging events
+	-- logging events
 	EXECUTE Logs.SP_EventR @EventProcName, @rowcount 
 
-  INSERT INTO [Master].VersionConfigs (VersionDateTime, OperationRunID)
-	SELECT NewDeliveryDate, 
-		   IDENT_CURRENT('Logs.OperationRuns') AS OperationRunID
+	INSERT INTO [Master].VersionConfigs (VersionDateTime, OperationRunID)
+
+		SELECT NewDeliveryDate, 
+			   IDENT_CURRENT('Logs.OperationRuns') AS OperationRunID
 		FROM Staging.NewDeliveries
-		ORDER BY NewDeliveryDate
-		OFFSET 0 ROWS FETCH FIRST 1 ROWS ONLY
+	
+	-- Calculate and save how many rows were populeted
+	SET @RowCount = (SELECT @@ROWCOUNT)  
 
-		SET @RowCount = (SELECT @@ROWCOUNT)  -- Calculate and save how many rows were populeted
-
- -- completing logging
+	-- completing logging
 	EXECUTE Logs.SP_EventC @EventProcName, @rowcount 
 
 END TRY 
 
+--logging errors
 BEGIN CATCH
 
-DECLARE 
-@ErrorMessage nvarchar (max) = ERROR_MESSAGE(),
-@ErrorNumber int = ERROR_NUMBER(),
-@ErrortProcName VARCHAR(250) = OBJECT_SCHEMA_NAME(@@PROCID)+'.'+OBJECT_NAME(@@PROCID)
+	DECLARE 
+	@ErrorMessage nvarchar (max) = ERROR_MESSAGE(),
+	@ErrorNumber int = ERROR_NUMBER(),
+	@ErrortProcName VARCHAR(250) = OBJECT_SCHEMA_NAME(@@PROCID)+'.'+OBJECT_NAME(@@PROCID)
 
-EXEC [Logs].[SP_Errors]  @ErrortProcName=@ErrortProcName, @ErrorMessage = @ErrorMessage, @ErrorNumber =  @ErrorNumber 
+	EXEC [Logs].[SP_Errors]  @ErrortProcName=@ErrortProcName, @ErrorMessage = @ErrorMessage, @ErrorNumber =  @ErrorNumber 
 
 END CATCH;
 

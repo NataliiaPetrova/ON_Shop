@@ -19,7 +19,7 @@ DECLARE @DeliveryLocationID int
 
 declare @yearr int 
 DECLARE @Counter INT =0
-DECLARE @OrderQuantity INT = 30000  ----amount of orders
+DECLARE @OrderQuantity INT = 3000  ----amount of orders
 set @yearr=2020
 WHILE @Counter < @OrderQuantity
 BEGIN
@@ -64,7 +64,7 @@ SELECT @DeliveryLocationID  =(SELECT TOP(1) DeliveryLocationID
 INSERT INTO Master.Orders(CustomerID,EmployeeID,OrderDate,PaymentID,DeliveryID) 
 VALUES (@CustomerID,@EmployeeID,@OrderDate,@PaymentID,@DeliveryLocationID )
 
-SET @RowCount = @RowCount + (SELECT @@ROWCOUNT) 
+SET @ROWCOUNT += (SELECT @@ROWCOUNT)
 SET @Counter+=1
 print @Counter
 END

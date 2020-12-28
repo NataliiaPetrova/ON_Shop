@@ -22,7 +22,7 @@ BEGIN
 				'', --to be updated
 				ROUND(RAND()*(9-1)+1,0), --Master.Brands
 				ROUND(RAND()*(3-1)+1,0) --Master.Categories
-				SET @RowCount = @RowCount + (SELECT @@ROWCOUNT) 
+				SET @ROWCOUNT += (SELECT @@ROWCOUNT)
 		SET @iterator = @iterator +1
 	END
 

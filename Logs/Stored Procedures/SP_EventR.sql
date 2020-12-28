@@ -4,7 +4,7 @@
 )
 AS
 BEGIN
--- Create event on  @EventProcName process start
+	-- Create event on  @EventProcName process start
 	INSERT INTO Logs.EventLogs (OperationRunID, EventProcName, EventStatusID, AffectedRows, EventMessage)
 	SELECT 
 		IDENT_CURRENT('Logs.OperationRuns') AS OperationRunID,
