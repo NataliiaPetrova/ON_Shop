@@ -1,24 +1,28 @@
-﻿/****** Object:  StoredProcedure [Staging].[SP_NewDelivery]    Script Date: 28.12.2020 18:41:00 ******/
+﻿CREATE PROCEDURE [Staging].[SP_BCPNewDelivery]
 
-CREATE  PROCEDURE [Staging].[SP_NewDelivery]
+(
+ @MinPrice INT = 100,
+ @MaxPrice INT = 500,
+ @MinAmount INT = 1,
+ @MaxAmount INT = 10
+
+)
 AS
 
 BEGIN TRY 
 
 	DECLARE
-	@StartDate DATE,
-	@CurrentProdID INT = 3,
-	@LastProdID INT,
-	@ProdAmount INT,
-	@Counter INT,
-	@RandomPrice MONEY,
-	@EventProcName VARCHAR(250) = OBJECT_SCHEMA_NAME(@@PROCID)+'.'+OBJECT_NAME(@@PROCID),
-	@RowCount INT = 0,
+	 @EventProcName VARCHAR(250) = OBJECT_SCHEMA_NAME(@@PROCID)+'.'+OBJECT_NAME(@@PROCID),
+	 @RowCount INT = 0,
+	 @Amount INT = 10,
+	 @RandomAmount INT,
+	 @CounterKingProd INT,
+	 @RandomPrice INT,
+	 @CounterProd INT,
+	 @DeliveryDate DATETIME,
 
-	-- managing xp_cmdshell Server configuration option
-	@prevAdvancedOptions INT, 
-	--variables for managing xp_cmdshell Server configuration option
-	@prevXpCmdshell INT,       
+	@prevAdvancedOptions INT, -- variables for managing xp_cmdshell Server configuration option
+	@prevXpCmdshell INT,       --variables for managing xp_cmdshell Server configuration option
 
 	@bcp_cmd VARCHAR(1000),
 	@exe_path VARCHAR(200) = 'call "C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\BCP.EXE"',
@@ -34,60 +38,47 @@ BEGIN TRY
 	
 	-- logging events
 	EXECUTE Logs.SP_EventR @EventProcName, @rowcount 
+	
 
-	-- deleting verything from NewDeliveries
-	TRUNCATE TABLE  Staging.NewDeliveries
+	DROP TABLE IF EXISTS #Products -- temporary table for storing random unique kind of products for new delivery
+	CREATE TABLE #Products
+	(ID INT IDENTITY(1,1),
+	ProductID INT)
 
-	-- store all ordered products in a temporary table
-	DROP TABLE IF EXISTS #AllOrders
-		SELECT OrderDetails.ProductID, COUNT(*) AS AllProducts
-        INTO #AllOrders
-		 FROM Master.OrderDetails 
-		    GROUP BY OrderDetails.ProductID
-	        ORDER BY OrderDetails.ProductID
-		
-		
 
-	-- populating 'Staging.NewDeliveries'
+	INSERT INTO #Products (ProductID)
+	SELECT TOP(10) ProductID
+		FROM Master.Products
+		ORDER BY NEWID()
 
-	SELECT @StartDate = MIN(OrderDate)
-	FROM Master.Orders
+	SET  @DeliveryDate = CURRENT_TIMESTAMP
+	SET @CounterkingProd = 1
+		WHILE @CounterKingProd <= @Amount
+			BEGIN
+				SELECT @RandomPrice = FLOOR(RAND()*(@MaxPrice-@MinPrice+1))+@MinPrice
+				SELECT @RandomAmount = FLOOR(RAND()*(@MaxAmount-@MinAmount+1))+@MinAmount
 
-	SELECT @LastProdID = MAX(ProductID)
-	FROM Master.Products
+				SET @CounterProd = 1
+					WHILE @CounterProd <= @RandomAmount
+						BEGIN
+							INSERT INTO Staging.NewDeliveries  (ProductID, Price, NewDeliveryDate)
+							SELECT ProductID AS ProductID,
+								   @RandomPrice AS PricePerUnit,
+								   @DeliveryDate  AS DeliveryDate
+							FROM #Products
+								WHERE ID = @CounterProd 
+	                      
+							
+						SET @CounterProd +=1
+						END
 
-	WHILE @CurrentProdID <= @LastProdID
-		BEGIN
-			SELECT @ProdAmount = AllProducts * 1.1
-			FROM #AllOrders
-				WHERE ProductID = @CurrentProdID
+			SET @CounterkingProd +=1
+			END
 
-				-- Select a random price from 100 to 500
-				SET @RandomPrice = (SELECT CONVERT( DECIMAL(5, 2), 10 + (500-100)*RAND(CHECKSUM(NEWID()))))
-
-			SET @Counter = 1
-			WHILE @Counter <= @ProdAmount
-
-                -- populating NewDeliveries table
-				BEGIN
-					INSERT INTO Staging.NewDeliveries(ProductID, Price, NewDeliveryDate)
-					SELECT @CurrentProdID, @RandomPrice, @StartDate
-
-					-- Calculate and save how many rows were populeted
-					SET @RowCount += (SELECT @@ROWCOUNT) 
-
-				SET @Counter += 1
-				END
-		
-		 SET @CurrentProdID +=1
-		END
-		
-    --completing event logging
 	EXECUTE Logs.SP_EventC @EventProcName, @rowcount
 
 
-	-- BCP process - loading new delivery to txt file.
-
+	-- BCP process for loading new delivery from temporary table to txt file.
 	--xp_cmdshell Server configuration option
 			
 		SELECT @prevAdvancedOptions = cast(value_in_use as int) from sys.configurations where name = 'show advanced options'
@@ -106,13 +97,13 @@ BEGIN TRY
 			END
 
 
-			--	 start main bcp block 
+	--	 start main bcp block 
             SELECT @Date = CONVERT (VARCHAR (30), GETDATE(), 102)
 			SET @bcp_cmd = @exe_path + @FromTable + ' out' + @Path + @FileName + @Date + @FileExtention + @bcpParam + @Delimeter + @ServerName + @UserName;
 			
 			EXEC master..xp_cmdshell @bcp_cmd;
 
-			--	 end main bcp block 
+	--	 end main bcp block 
 
 
 			SELECT @prevAdvancedOptions = cast(value_in_use as int) from sys.configurations where name = 'show advanced options'
@@ -141,6 +132,7 @@ BEGIN CATCH
 	@ErrorNumber int = ERROR_NUMBER(),
 	@ErrortProcName VARCHAR(250) = OBJECT_SCHEMA_NAME(@@PROCID)+'.'+OBJECT_NAME(@@PROCID)
 
-EXEC [Logs].[SP_Errors]  @ErrortProcName=@ErrortProcName, @ErrorMessage = @ErrorMessage, @ErrorNumber =  @ErrorNumber 
+	EXEC [Logs].[SP_Errors]  @ErrortProcName=@ErrortProcName, @ErrorMessage = @ErrorMessage, @ErrorNumber =  @ErrorNumber 
 
 END CATCH;
+

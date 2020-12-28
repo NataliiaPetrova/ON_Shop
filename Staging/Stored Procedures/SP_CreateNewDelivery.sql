@@ -1,14 +1,15 @@
-﻿/****** Object:  StoredProcedure [Staging].[SP_NewDelivery]    Script Date: 28.12.2020 16:58:29 ******/
+﻿
+/****** Object:  StoredProcedure [Staging].[SP_NewDelivery]    Script Date: 28.12.2020 16:58:29 ******/
 
+CREATE PROCEDURE [Staging].[SP_CreateNewDelivery]
 
-CREATE  PROCEDURE [Staging].[SP_NewDelivery]
 AS
 
 BEGIN TRY 
 
 	DECLARE
 	@StartDate DATE,
-	@CurrentProdID INT = 3,
+	@CurrentProdID INT = 1,
 	@LastProdID INT,
 	@ProdAmount INT,
 	@Counter INT,

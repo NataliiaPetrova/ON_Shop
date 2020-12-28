@@ -13,7 +13,7 @@ BEGIN TRY
 	EXECUTE Logs.SP_OperationRunsR
 
 	 
-	  EXEC [Staging].[SP_NewDelivery]
+	  EXEC [Staging].[SP_CreateNewDelivery]
 	  EXEC [Staging].[SP_VersionDelivery]
 	  EXEC [Master].[SP_Stocks]    
 	

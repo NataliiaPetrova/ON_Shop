@@ -1,13 +1,10 @@
-﻿
-/****** Object:  StoredProcedure [Staging].[SP_BCPInDB]    Script Date: 28.12.2020 18:40:35 ******/
-CREATE  PROCEDURE [Staging].[SP_BCPInDB]
-
+﻿CREATE PROCEDURE [Staging].[SP_BCPNewDeliveryIN]
+	
 AS
 
 BEGIN TRY 
 
 	DECLARE
-
 	@prevAdvancedOptions INT, 
 	-- variables for managing xp_cmdshell Server configuration option
 	@prevXpCmdshell INT,       
@@ -25,11 +22,8 @@ BEGIN TRY
 	@FileExtention VARCHAR(10) = '.txt'
 	
 
-	
-
-    -- BCP process for loading new delivery from temporary table to txt file.
-
-	--xp_cmdshell Server configuration option
+    -- BCP process for loading new delivery from temporary table to txt file
+	-- xp_cmdshell Server configuration option
 			
 		SELECT @prevAdvancedOptions = cast(value_in_use as int) from sys.configurations where name = 'show advanced options'
 		SELECT @prevXpCmdshell = cast(value_in_use as int) from sys.configurations where name = 'xp_cmdshell'
@@ -48,18 +42,14 @@ BEGIN TRY
 
 
 			--	 start main bcp block 
- 
 			SELECT @Date = CONVERT (VARCHAR (30), GETDATE(), 102)
 			SET @bcp_cmd ='BCP "[On_Shop].[Master].[NewDeliveries]" in ' + @Path + @FileName + @Date + @FileExtention + @bcpParam + @Delimeter + @ServerName + @UserName;
 
-			
 			EXEC master..xp_cmdshell @bcp_cmd;
 
 
 
 			--	 end main bcp block 
-
-
 			SELECT @prevAdvancedOptions = cast(value_in_use as int) from sys.configurations where name = 'show advanced options'
 			SELECT @prevXpCmdshell = cast(value_in_use as int) from sys.configurations where name = 'xp_cmdshell'
 
@@ -86,7 +76,8 @@ BEGIN CATCH
 	@ErrorNumber int = ERROR_NUMBER(),
 	@ErrortProcName VARCHAR(250) = OBJECT_SCHEMA_NAME(@@PROCID)+'.'+OBJECT_NAME(@@PROCID)
 
-EXEC [Logs].[SP_Errors]  @ErrortProcName=@ErrortProcName, @ErrorMessage = @ErrorMessage, @ErrorNumber =  @ErrorNumber 
+	EXEC [Logs].[SP_Errors]  @ErrortProcName=@ErrortProcName, @ErrorMessage = @ErrorMessage, @ErrorNumber =  @ErrorNumber 
 
 END CATCH;
+
 
