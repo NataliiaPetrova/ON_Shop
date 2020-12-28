@@ -13,7 +13,7 @@
     </RootPath>
     <RootNamespace>ON_Shop</RootNamespace>
     <AssemblyName>ON_Shop</AssemblyName>
-    <ModelCollation>1033, CI</ModelCollation>
+    <ModelCollation>1058,CI</ModelCollation>
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -22,6 +22,9 @@
     <SqlServerVerification>False</SqlServerVerification>
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseSet>True</TargetDatabaseSet>
+    <GenerateCreateScript>True</GenerateCreateScript>
+    <DefaultCollation>Ukrainian_CI_AS</DefaultCollation>
+    <DefaultFilegroup>PRIMARY</DefaultFilegroup>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -56,5 +59,70 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
+    <Folder Include="dbo\" />
+    <Folder Include="dbo\Tables\" />
+    <Folder Include="Master\" />
+    <Folder Include="Master\Tables\" />
+    <Folder Include="Logs\" />
+    <Folder Include="Logs\Tables\" />
+    <Folder Include="Staging\" />
+    <Folder Include="Staging\Tables\" />
+    <Folder Include="dbo\Views\" />
+    <Folder Include="Staging\Stored Procedures\" />
+    <Folder Include="Master\Stored Procedures\" />
+    <Folder Include="Logs\Stored Procedures\" />
+    <Folder Include="Security\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Master\Tables\Customers.sql" />
+    <Build Include="Master\Tables\Calendar.sql" />
+    <Build Include="Master\Tables\Employees.sql" />
+    <Build Include="Master\Tables\Cities.sql" />
+    <Build Include="Master\Tables\Streets.sql" />
+    <Build Include="Master\Tables\Payments.sql" />
+    <Build Include="Master\Tables\Brands.sql" />
+    <Build Include="Master\Tables\Categories.sql" />
+    <Build Include="Master\Tables\Products.sql" />
+    <Build Include="Master\Tables\Stocks.sql" />
+    <Build Include="Master\Tables\Deliveries.sql" />
+    <Build Include="Master\Tables\Orders.sql" />
+    <Build Include="Master\Tables\OrderDetails.sql" />
+    <Build Include="Logs\Tables\Operations.sql" />
+    <Build Include="Logs\Tables\OperationsStatuses.sql" />
+    <Build Include="Logs\Tables\OperationRuns.sql" />
+    <Build Include="Logs\Tables\EventLogs.sql" />
+    <Build Include="Logs\Tables\ErrorLogs.sql" />
+    <Build Include="Master\Tables\VersionConfigs.sql" />
+    <Build Include="Staging\Tables\NewDeliveries.sql" />
+    <Build Include="dbo\Views\tESTING.sql" />
+    <Build Include="Staging\Stored Procedures\SP_PlacingOrder.sql" />
+    <Build Include="Master\Stored Procedures\SP_Payments.sql" />
+    <Build Include="Staging\Stored Procedures\SP_TruncateNewDeliveries.sql" />
+    <Build Include="Master\Stored Procedures\SP_Streets.sql" />
+    <Build Include="Master\Stored Procedures\SP_Stocks.sql" />
+    <Build Include="Logs\Stored Procedures\SP_EventC.sql" />
+    <Build Include="Master\Stored Procedures\SP_Deliveries.sql" />
+    <Build Include="Staging\Stored Procedures\SP_VersionDelivery.sql" />
+    <Build Include="Staging\Stored Procedures\SP_VersionOrder.sql" />
+    <Build Include="Master\Stored Procedures\SP_Brands.sql" />
+    <Build Include="Master\Stored Procedures\SP_Cities.sql" />
+    <Build Include="Master\Stored Procedures\SP_Categories.sql" />
+    <Build Include="Master\Stored Procedures\SP_Calendar.sql" />
+    <Build Include="Master\Stored Procedures\SP_DataPopulation.sql" />
+    <Build Include="Master\Stored Procedures\SP_Customers.sql" />
+    <Build Include="Logs\Stored Procedures\SP_Errors.sql" />
+    <Build Include="Master\Stored Procedures\SP_Employees.sql" />
+    <Build Include="Staging\Stored Procedures\SP_NewDelivery.sql" />
+    <Build Include="Logs\Stored Procedures\SP_EventR.sql" />
+    <Build Include="Logs\Stored Procedures\SP_Operations.sql" />
+    <Build Include="Logs\Stored Procedures\SP_OperationRunsR.sql" />
+    <Build Include="Logs\Stored Procedures\SP_OperationRunsC.sql" />
+    <Build Include="Master\Stored Procedures\SP_Orders.sql" />
+    <Build Include="Master\Stored Procedures\SP_OrderDetails.sql" />
+    <Build Include="Logs\Stored Procedures\SP_OperationStatus.sql" />
+    <Build Include="Master\Stored Procedures\SP_Products.sql" />
+    <Build Include="Security\Logs.sql" />
+    <Build Include="Security\Master.sql" />
+    <Build Include="Security\Staging.sql" />
   </ItemGroup>
 </Project>
