@@ -1,7 +1,6 @@
 ﻿/****** Object:  StoredProcedure [Logs].[SP_Errors]    Script Date: 28.12.2020 16:50:55 ******/
 
-SET NOCOUNT ON
-GO
+
 
 CREATE  PROCEDURE [Logs].[SP_Errors]
 
