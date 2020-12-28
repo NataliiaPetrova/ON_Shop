@@ -10,7 +10,7 @@ BEGIN TRY
 
 	DECLARE
 	@EventProcName VARCHAR(250) = OBJECT_SCHEMA_NAME(@@PROCID)+'.'+OBJECT_NAME(@@PROCID),
-	@RowCount INT
+	@RowCount INT = 0
 
 	-- logging events
 	EXECUTE Logs.SP_EventR @EventProcName, @rowcount 
