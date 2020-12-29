@@ -1,4 +1,5 @@
-﻿CREATE PROCEDURE [Staging].[SP_BCPNewDelivery]
+﻿/****** Object:  StoredProcedure [Staging].[SP_BCPNewDelivery]    Script Date: 29.12.2020 0:18:11 ******/
+CREATE PROCEDURE [Staging].[SP_BCPNewDelivery]
 
 (
  @MinPrice INT = 100,
@@ -16,13 +17,15 @@ BEGIN TRY
 	 @RowCount INT = 0,
 	 @Amount INT = 10,
 	 @RandomAmount INT,
-	 @CounterKingProd INT,
+	 @CounterProdKind INT,
 	 @RandomPrice INT,
 	 @CounterProd INT,
 	 @DeliveryDate DATETIME,
 
-	@prevAdvancedOptions INT, -- variables for managing xp_cmdshell Server configuration option
-	@prevXpCmdshell INT,       --variables for managing xp_cmdshell Server configuration option
+	--managing xp_cmdshell Server configuration option
+	@prevAdvancedOptions INT,
+	--managing xp_cmdshell Server configuration option
+	@prevXpCmdshell INT,       
 
 	@bcp_cmd VARCHAR(1000),
 	@exe_path VARCHAR(200) = 'call "C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\BCP.EXE"',
@@ -39,8 +42,8 @@ BEGIN TRY
 	-- logging events
 	EXECUTE Logs.SP_EventR @EventProcName, @rowcount 
 	
-
-	DROP TABLE IF EXISTS #Products -- temporary table for storing random unique kind of products for new delivery
+	-- storing random products for new delivery
+	DROP TABLE IF EXISTS #Products 
 	CREATE TABLE #Products
 	(ID INT IDENTITY(1,1),
 	ProductID INT)
@@ -52,8 +55,8 @@ BEGIN TRY
 		ORDER BY NEWID()
 
 	SET  @DeliveryDate = CURRENT_TIMESTAMP
-	SET @CounterkingProd = 1
-		WHILE @CounterKingProd <= @Amount
+	SET @CounterProdKind = 1
+		WHILE @CounterProdKind <= @Amount
 			BEGIN
 				SELECT @RandomPrice = FLOOR(RAND()*(@MaxPrice-@MinPrice+1))+@MinPrice
 				SELECT @RandomAmount = FLOOR(RAND()*(@MaxAmount-@MinAmount+1))+@MinAmount
@@ -72,14 +75,14 @@ BEGIN TRY
 						SET @CounterProd +=1
 						END
 
-			SET @CounterkingProd +=1
+			SET @CounterProdKind +=1
 			END
 
 	EXECUTE Logs.SP_EventC @EventProcName, @rowcount
 
 
-	-- BCP process for loading new delivery from temporary table to txt file.
-	--xp_cmdshell Server configuration option
+		-- BCP process for loading new delivery from temporary table to txt file.
+		--xp_cmdshell Server configuration option
 			
 		SELECT @prevAdvancedOptions = cast(value_in_use as int) from sys.configurations where name = 'show advanced options'
 		SELECT @prevXpCmdshell = cast(value_in_use as int) from sys.configurations where name = 'xp_cmdshell'
@@ -97,14 +100,13 @@ BEGIN TRY
 			END
 
 
-	--	 start main bcp block 
+			--	 start main bcp block 
             SELECT @Date = CONVERT (VARCHAR (30), GETDATE(), 102)
 			SET @bcp_cmd = @exe_path + @FromTable + ' out' + @Path + @FileName + @Date + @FileExtention + @bcpParam + @Delimeter + @ServerName + @UserName;
 			
 			EXEC master..xp_cmdshell @bcp_cmd;
 
-	--	 end main bcp block 
-
+			--	 end main bcp block 
 
 			SELECT @prevAdvancedOptions = cast(value_in_use as int) from sys.configurations where name = 'show advanced options'
 			SELECT @prevXpCmdshell = cast(value_in_use as int) from sys.configurations where name = 'xp_cmdshell'
@@ -135,4 +137,3 @@ BEGIN CATCH
 	EXEC [Logs].[SP_Errors]  @ErrortProcName=@ErrortProcName, @ErrorMessage = @ErrorMessage, @ErrorNumber =  @ErrorNumber 
 
 END CATCH;
-

@@ -22,8 +22,8 @@ BEGIN TRY
 	@FileExtention VARCHAR(10) = '.txt'
 	
 
-    -- BCP process for loading new delivery from temporary table to txt file
-	-- xp_cmdshell Server configuration option
+		-- BCP process for loading new delivery from temporary table to txt file
+		-- xp_cmdshell Server configuration option
 			
 		SELECT @prevAdvancedOptions = cast(value_in_use as int) from sys.configurations where name = 'show advanced options'
 		SELECT @prevXpCmdshell = cast(value_in_use as int) from sys.configurations where name = 'xp_cmdshell'
