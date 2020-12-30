@@ -39,7 +39,7 @@ SELECT * FROM Detailed
   ORDER BY Date
 OPTION (MAXRECURSION 0)
 
-SET @ROWCOUNT += (SELECT @@ROWCOUNT)
+SET @ROWCOUNT += @@ROWCOUNT
 
 EXECUTE Logs.SP_EventC @EventProcName, @ROWCOUNT
 
@@ -47,10 +47,10 @@ END TRY
 
 BEGIN CATCH
 
-DECLARE 
-@ErrorMessage nvarchar (max) = ERROR_MESSAGE(),
-@ErrorNumber int = ERROR_NUMBER(),
-@ErrortProcName VARCHAR(250) = OBJECT_SCHEMA_NAME(@@PROCID)+'.'+OBJECT_NAME(@@PROCID)
+    DECLARE 
+    @ErrorMessage nvarchar (max) = ERROR_MESSAGE(),
+    @ErrorNumber int = ERROR_NUMBER(),
+    @ErrortProcName VARCHAR(250) = OBJECT_SCHEMA_NAME(@@PROCID)+'.'+OBJECT_NAME(@@PROCID)
 
 EXEC [Logs].[SP_Errors]  @ErrortProcName=@ErrortProcName, @ErrorMessage = @ErrorMessage, @ErrorNumber =  @ErrorNumber 
 

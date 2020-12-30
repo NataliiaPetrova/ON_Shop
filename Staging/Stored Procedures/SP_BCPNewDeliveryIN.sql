@@ -1,4 +1,13 @@
-﻿CREATE PROCEDURE [Staging].[SP_BCPNewDeliveryIN]
+﻿--========================================================================================================--
+/*
+	   Object:				StoredProcedure [Staging].[SP_BCPNewDeliveryIN]    
+	   Script Date:			28.12.2020 16:50:55 
+	   Short Description:	Transfering data from file into newdelivery table with bcp
+	   Scripted by:			LV4097\NATALIIAPETROVA
+*/
+--========================================================================================================--
+
+CREATE PROCEDURE [Staging].[SP_BCPNewDeliveryIN]
 	
 AS
 
@@ -43,7 +52,7 @@ BEGIN TRY
 
 			--	 start main bcp block 
 			SELECT @Date = CONVERT (VARCHAR (30), GETDATE(), 102)
-			SET @bcp_cmd ='BCP "[On_Shop].[Master].[NewDeliveries]" in ' + @Path + @FileName + @Date + @FileExtention + @bcpParam + @Delimeter + @ServerName + @UserName;
+			SET @bcp_cmd ='BCP "[On_Shop3].[Master].[NewDeliveries]" in ' + @Path + @FileName + @Date + @FileExtention + @bcpParam + @Delimeter + @ServerName + @UserName;
 
 			EXEC master..xp_cmdshell @bcp_cmd;
 

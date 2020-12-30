@@ -1,4 +1,14 @@
-﻿/****** Object:  StoredProcedure [Staging].[SP_BCPNewDelivery]    Script Date: 29.12.2020 0:18:11 ******/
+﻿--========================================================================================================--
+/*
+	   Object:				StoredProcedure [Staging].[SP_BCPNewDelivery]    
+	   Script Date:			29.12.2020 0:18:11
+	   Short Description:	Launches procedure for newdelivery data generation, 
+							creating file withbcp,
+							logging and error handling of the operation
+	   Scripted by:			LV4097\NATALIIAPETROVA
+*/
+--========================================================================================================--
+
 CREATE PROCEDURE [Staging].[SP_BCPNewDelivery]
 
 (

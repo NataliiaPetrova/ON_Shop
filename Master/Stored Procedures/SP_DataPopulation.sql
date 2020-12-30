@@ -1,4 +1,14 @@
-﻿CREATE    PROCEDURE [Master].[SP_DataPopulation]
+﻿--========================================================================================================--
+/*
+	   Object:              [Master].[SP_DataPopulation] 
+	   Script Date:         28.12.2020 16:50:55 
+	   Short Description:   Procedure for seeding data into tables, logging, eror handling
+	   Scripted by:			LV4097\NATALIIAPETROVA
+*/
+--========================================================================================================--
+
+
+CREATE   PROCEDURE [Master].[SP_DataPopulation]
 AS
 BEGIN TRY 
 	DECLARE
@@ -8,8 +18,8 @@ BEGIN TRY
 -- Populating 'Operation status' table without logging
 EXECUTE Logs.SP_OperationStatus
 
--- Starting 'OperationRuns' process:
-	-- Creating new OperationRunID and creating new record in 'Logs.OperationEvent' table
+    -- Starting 'OperationRuns' process:
+	-- Creating new OperationRunID and creating new record in 'Logs.EventLogs' table
 	EXECUTE Logs.SP_OperationRunsR
 
 	  EXEC[Logs].[SP_Operations]
@@ -27,18 +37,18 @@ EXECUTE Logs.SP_OperationStatus
       EXEC [Master].[SP_OrderDetails]
 	 
 
--- Completing 'OperationRuns' process:
- EXECUTE Logs.SP_OperationRunsC
+    -- Completing 'OperationRuns' process:
+    EXECUTE Logs.SP_OperationRunsC
 END TRY 
 
 
 BEGIN CATCH
 
-DECLARE 
-@ErrorMessage nvarchar (max) = ERROR_MESSAGE(),
-@ErrorNumber int = ERROR_NUMBER(),
-@ErrortProcName VARCHAR(250) = OBJECT_SCHEMA_NAME(@@PROCID)+'.'+OBJECT_NAME(@@PROCID)
+    DECLARE 
+    @ErrorMessage nvarchar (max) = ERROR_MESSAGE(),
+    @ErrorNumber int = ERROR_NUMBER(),
+    @ErrortProcName VARCHAR(250) = OBJECT_SCHEMA_NAME(@@PROCID)+'.'+OBJECT_NAME(@@PROCID)
 
-EXEC [Logs].[SP_Errors]  @ErrortProcName=@ErrortProcName, @ErrorMessage = @ErrorMessage, @ErrorNumber =  @ErrorNumber 
+    EXEC [Logs].[SP_Errors]  @ErrortProcName=@ErrortProcName, @ErrorMessage = @ErrorMessage, @ErrorNumber =  @ErrorNumber 
 
 END CATCH;

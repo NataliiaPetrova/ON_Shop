@@ -1,4 +1,14 @@
-﻿CREATE    PROCEDURE [Master].[SP_ReStocking]
+﻿--========================================================================================================--
+/*
+	   Object:				StoredProcedure [Master].[SP_ReStocking]  
+	   Short Description:   For launching procedures that are populating newdelivery table,
+							creating version and populating stock table. Loging and error handling
+	   Script Date:			28.12.2020 16:50:55 
+	   Scripted by:			LV4097\NATALIIAPETROVA
+*/
+--========================================================================================================--
+
+CREATE    PROCEDURE [Master].[SP_ReStocking]
 AS
 BEGIN TRY 
 	DECLARE

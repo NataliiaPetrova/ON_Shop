@@ -12,7 +12,8 @@ BEGIN
 		VALUES
 		((SELECT OperationStatusID FROM Logs.OperationsStatuses WHERE Status = 'R'))	
 			
-	-- Create event on 'OperationRuns' process start
+
+		-- Create event on 'OperationRuns' process start
 		INSERT INTO Logs.EventLogs (OperationRunID, EventProcName, EventStatusID, AffectedRows, EventMessage)
 		SELECT 
 			IDENT_CURRENT('Logs.OperationRuns') AS OperationRunID,

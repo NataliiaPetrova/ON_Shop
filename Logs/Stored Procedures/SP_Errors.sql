@@ -1,4 +1,11 @@
-﻿/****** Object:  StoredProcedure [Logs].[SP_Errors]    Script Date: 28.12.2020 16:50:55 ******/
+﻿--========================================================================================================--
+/*
+	   Object:				StoredProcedure [Logs].[SP_Errors]    
+	   Script Date:			28.12.2020 16:50:55 
+	   Short Description:	Launches procedure for catching errors
+	   Scripted by:			LV4097\NATALIIAPETROVA
+*/
+--========================================================================================================--
 
 
 
