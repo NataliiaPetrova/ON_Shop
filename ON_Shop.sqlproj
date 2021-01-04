@@ -94,7 +94,6 @@
     <Build Include="Logs\Tables\ErrorLogs.sql" />
     <Build Include="Master\Tables\VersionConfigs.sql" />
     <Build Include="Staging\Tables\NewDeliveries.sql" />
-    <Build Include="Staging\Stored Procedures\SP_PlacingOrder.sql" />
     <Build Include="Master\Stored Procedures\SP_Payments.sql" />
     <Build Include="Staging\Stored Procedures\SP_TruncateNewDeliveries.sql" />
     <Build Include="Master\Stored Procedures\SP_Streets.sql" />
@@ -102,7 +101,6 @@
     <Build Include="Logs\Stored Procedures\SP_EventC.sql" />
     <Build Include="Master\Stored Procedures\SP_Deliveries.sql" />
     <Build Include="Staging\Stored Procedures\SP_VersionDelivery.sql" />
-    <Build Include="Staging\Stored Procedures\SP_VersionOrder.sql" />
     <Build Include="Master\Stored Procedures\SP_Brands.sql" />
     <Build Include="Master\Stored Procedures\SP_Cities.sql" />
     <Build Include="Master\Stored Procedures\SP_Categories.sql" />
@@ -111,7 +109,6 @@
     <Build Include="Master\Stored Procedures\SP_Customers.sql" />
     <Build Include="Logs\Stored Procedures\SP_Errors.sql" />
     <Build Include="Master\Stored Procedures\SP_Employees.sql" />
-    <Build Include="Staging\Stored Procedures\SP_NewDelivery.sql" />
     <Build Include="Logs\Stored Procedures\SP_EventR.sql" />
     <Build Include="Logs\Stored Procedures\SP_Operations.sql" />
     <Build Include="Logs\Stored Procedures\SP_OperationRunsR.sql" />
@@ -124,9 +121,15 @@
     <Build Include="Security\Master.sql" />
     <Build Include="Security\Staging.sql" />
     <Build Include="Master\Tables\NewDeliveries.sql" />
+    <Build Include="Master\Stored Procedures\SP_ReStocking.sql" />
+    <Build Include="Staging\Stored Procedures\SP_CreateNewDelivery.sql" />
+    <Build Include="Staging\Stored Procedures\SP_BCPNewDelivery.sql" />
+    <Build Include="Staging\Stored Procedures\SP_BCPNewDeliveryIN.sql" />
+    <Build Include="Staging\Stored Procedures\SP_VersionOrder.sql" />
+    <Build Include="Staging\Stored Procedures\SP_PlacingOrder.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CreateTables.sql" />
     <None Include="DataPopulation.sql" />
+    <None Include="CreateTables.sql" />
   </ItemGroup>
 </Project>
