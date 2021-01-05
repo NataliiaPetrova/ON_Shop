@@ -13,3 +13,5 @@ EXEC [Master].[SP_DataPopulation]
 EXEC [Master].[SP_ReStocking]
 
 EXEC [Staging].[SP_PlacingOrder] 1
+
+EXEC  [Master].[SP_RePrice]
